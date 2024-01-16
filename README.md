@@ -11,3 +11,7 @@ docker build -t socket:lastest .
 ```bash
 docker run -p 8080:8080 socket:lastest
 ```
+
+```bash
+docker compose up --build -d
+```

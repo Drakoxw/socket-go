@@ -24,9 +24,9 @@ var (
 
 // Client representa a un cliente conectado al servidor WebSocket
 type Client struct {
-	ID     string
+	ID         string
 	Connection *websocket.Conn
-	Room *Room  // Agrega el campo Room
+	Room       *Room // Agrega el campo Room
 }
 
 // Room representa una sala en el servidor WebSocket
@@ -55,7 +55,7 @@ func handleWebSocket(c echo.Context) error {
 	}
 
 	client := &Client{
-		ID:     clientID,
+		ID:         clientID,
 		Connection: conn,
 	}
 
@@ -140,6 +140,5 @@ func main() {
 	e := echo.New()
 	e.Use(middleware.CORS())
 	e.GET("/ws", handleWebSocket)
-	fmt.Println("Servidor WebSocket escuchando en el puerto 8080...")
 	e.Logger.Fatal(e.Start(":8080"))
 }
