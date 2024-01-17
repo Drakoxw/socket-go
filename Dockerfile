@@ -11,5 +11,5 @@ FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 COPY --from=builder /go/bin/app /app
 ENTRYPOINT /app
-LABEL Name=socket Version=0.0.1
+LABEL Name=socket Version=1.0.1
 EXPOSE 8000

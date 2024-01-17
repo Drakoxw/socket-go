@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"sync"
+	"time"
+
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo/v4"
 )
@@ -31,6 +33,12 @@ type Room struct {
 	mu      sync.Mutex
 }
 
+type Message struct {
+	Sender   int64    `json:"sender"`
+	Content  string    `json:"content"`
+	DateTime time.Time `json:"dateTime"`
+}
+
 func HandleWebSocket(c echo.Context) error {
 	conn, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
@@ -55,13 +63,14 @@ func HandleWebSocket(c echo.Context) error {
 	fmt.Printf("Cliente %s conectado al WebSocket\n", client.ID)
 
 	for {
-		_, msg, err := conn.ReadMessage()
+		var message Message
+		err := conn.ReadJSON(&message)
 		if err != nil {
 			fmt.Println("Error al leer el mensaje:", err)
 			break
 		}
-		fmt.Printf("Mensaje recibido de %s en la sala %s: %s\n", client.ID, client.Room.ID, msg)
-		broadcast(client.Room, msg)
+		fmt.Printf("Mensaje recibido de %s en la sala '%s': %+v\n", client.ID, client.Room.ID, message)
+		broadcast(client.Room, message)
 	}
 
 	leaveRoom(client)
@@ -98,12 +107,13 @@ func leaveRoom(client *Client) {
 	}
 }
 
-func broadcast(room *Room, message []byte) {
+func broadcast(room *Room, message Message) {
+	message.DateTime = time.Now()
 	room.mu.Lock()
 	defer room.mu.Unlock()
 
 	for client := range room.Clients {
-		err := client.Connection.WriteMessage(websocket.TextMessage, message)
+		err := client.Connection.WriteJSON(message)
 		if err != nil {
 			fmt.Printf("Error al enviar mensaje a %s: %s\n", client.ID, err)
 		}

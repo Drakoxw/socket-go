@@ -1,5 +1,10 @@
 # GO SOCKET IO
 
+## RUN
+```bash
+go run main.go
+```
+
 ## CONEXION: 
 > ws://localhost:8080/ws?id=666&room=strategy-rom
 
