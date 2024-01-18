@@ -2,7 +2,7 @@ package chat
 
 import (
 	"fmt"
-	"net/http"
+	"socket/pkg/socket_cors"
 	"sync"
 	"time"
 
@@ -11,14 +11,10 @@ import (
 )
 
 var (
-	upgrader = websocket.Upgrader{
-		CheckOrigin: func(r *http.Request) bool {
-			return true
-		},
-	}
-	clients = make(map[*websocket.Conn]*Client)
-	rooms   = make(map[string]*Room)
-	mu      sync.Mutex
+	upgrader = socket_cors.Upgrader
+	clients  = make(map[*websocket.Conn]*Client)
+	rooms    = make(map[string]*Room)
+	mu       sync.Mutex
 )
 
 type Client struct {
@@ -34,7 +30,7 @@ type Room struct {
 }
 
 type Message struct {
-	Sender   int64    `json:"sender"`
+	Sender   int64     `json:"sender"`
 	Content  string    `json:"content"`
 	DateTime time.Time `json:"dateTime"`
 }

@@ -10,8 +10,12 @@ import (
 
 func main() {
 	e := echo.New()
-	
 	e.Use(middleware.CORS())
+
+	// Endpoint para manejar las peticiones REST a Socket
+	e.POST("/rest-sw", chat.Proxy.HandleRestRequest)
+
+	// WebSocket
 	e.GET("/ws", chat.HandleWebSocket)
 
 	port := utils.GetPort()

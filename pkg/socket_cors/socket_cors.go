@@ -1,12 +1,13 @@
-package websocket
+package socket_cors
 
 import (
 	"net/http"
+
 	"github.com/gorilla/websocket"
 )
 
 var (
-	upgrader = websocket.Upgrader{
+	Upgrader = websocket.Upgrader{
 		CheckOrigin: func(r *http.Request) bool {
 			return true
 		},
