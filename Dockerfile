@@ -1,15 +1,21 @@
-#build stage
-FROM golang:alpine AS builder
-RUN apk add --no-cache git
-WORKDIR /go/src/app
-COPY . .
-RUN go get -d -v ./...
-RUN go build -o /go/bin/app -v ./...
+FROM golang:1.20-alpine AS builder
 
-#final stage
-FROM alpine:latest
-RUN apk --no-cache add ca-certificates
-COPY --from=builder /go/bin/app /app
-ENTRYPOINT /app
-LABEL Name=socket Version=1.0.1
-EXPOSE 8000
+WORKDIR /go/src
+
+COPY ./go.mod ./go.sum ./
+
+ENV GO111MODULE=on
+
+RUN go mod download
+
+COPY . .
+
+RUN CGO_ENABLED=0 go build -o ./app ./main.go
+
+FROM alpine
+
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=builder /go/src/app /go/src/app
+
+CMD ["/go/src/app"]
+
