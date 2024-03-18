@@ -24,7 +24,7 @@ go run main.go
 ```
 
 ## CONEXION WS: 
->ws://localhost:8080/ws?id=1&room=rom-1
+>ws://localhost:8888/ws?id=1&room=rom-1
 ```
 {
 	"sender": 1,
@@ -33,7 +33,7 @@ go run main.go
 ```
 
 ## CONEXION HTTP: 
->http://localhost:8080/rest-sw?room=rom-1
+>http://localhost:8888/rest-sw?room=rom-1
 ```
 {
 	"sender": 2,
@@ -47,7 +47,7 @@ docker build -t socket:lastest .
 ```
 
 ```bash
-docker run -d -p 8080:8080  --name socket-app socket:lastest
+docker run -d -p 8888:8888  --name socket-app socket:lastest
 ```
 
 ```bash

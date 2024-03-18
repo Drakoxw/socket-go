@@ -32,7 +32,7 @@
     <script>
       const idUser = 2;
       const room = "strategy-rom";
-      const serverUrl = `ws://localhost:8080/ws?id=${idUser}&room=${room}`;
+      const serverUrl = `ws://localhost:8888/ws?id=${idUser}&room=${room}`;
       const socket = new WebSocket(serverUrl);
 
       socket.addEventListener("open", (event) => {
